@@ -8,20 +8,17 @@ def emotion_detector(text_to_analyze):
         headers=SWE_HEADERS, 
         json={'raw_document': {'text': text_to_analyze}}
     )
-
-    data = {
-        'anger': None,
-        'disgust': None,
-        'fear': None,
-        'joy': None,
-        'sadness': None,
-        'dominant_emotion': None
-    }
     
     if response.status_code == 200:
         emotions = response.json()['emotionPredictions'][0]['emotion']
-        for k in data.keys():
-            data[k] = emotions.get(k)
-        data['dominant_emotion'] = max(emotions, key=lambda x: emotions[x])
-    
-    return data
+        emotions['dominant_emotion'] = max(emotions, key=lambda x: emotions[x])
+        return emotions
+    else:
+        return  {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
